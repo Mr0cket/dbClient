@@ -1,33 +1,24 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 const DBclient = new DynamoDBClient();
-const dynamoDB = DynamoDBDocumentClient.from(DBclient);
 
-/* Common Operations */
-
-const scanTable = async (input) => {
-  let startKey = {};
-  const items = [];
-  while (startKey) {
-    const scanRegistrations = new ScanCommand({
-      ...input,
-      ExclusiveStartKey: startKey.id ? startKey : undefined,
-    });
-    const { Items: newItems, LastEvaluatedKey } = await dynamoDB.send(scanRegistrations);
-    startKey = LastEvaluatedKey;
-    items.push(...newItems);
-  }
-  return items;
+const marshallOptions = {
+  // Whether to automatically convert empty strings, blobs, and sets to `null`.
+  convertEmptyValues: false, // false, by default.
+  // Whether to remove undefined values while marshalling.
+  removeUndefinedValues: false, // false, by default.
+  // Whether to convert typeof object to map attribute.
+  convertClassInstanceToMap: false, // false, by default.
 };
 
-const deleteItem = async (TableName, Key) => {
-  const delete = new DeleteCommand({
-    TableName,
-    Key
-  });
-  await dynamoDB.send(delete);
+const unmarshallOptions = {
+  // Whether to return numbers as a string instead of converting them to native JavaScript numbers.
+  wrapNumbers: false, // false, by default.
 };
 
+const translateConfig = { marshallOptions, unmarshallOptions };
 
-module.exports = { dynamoDB, scanTable, deleteItem };
+const dynamoDB = DynamoDBDocumentClient.from(DBclient, translateConfig);
+
+module.exports = { dynamoDB };
