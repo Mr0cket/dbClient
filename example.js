@@ -1,6 +1,6 @@
 require('dotenv').config();
 const TABLES = require('./tables.json');
-const { writeFile } = require('./libs/helpers');
+const { writeData } = require('./libs/helpers');
 const { scanTable } = require('./libs/dbDocClient');
 
 const fetchData = async () => {
@@ -8,7 +8,7 @@ const fetchData = async () => {
     TableName: tables.registration,
     AttributesToGet: ['id'],
   });
-  await writeFile('data/registrations.json', registrations);
+  await writeData('registrations', registrations);
 };
 
 const run = async () => {

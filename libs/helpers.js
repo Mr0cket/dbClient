@@ -8,4 +8,9 @@ const writeFile = (fileName, data) =>
     });
   });
 
-module.exports = { writeFile };
+const writeData = (dataName, data) => {
+  const filePath = `${__dirname}/../data/${dataName}.json`;
+  return writeFile(filePath, data);
+};
+
+module.exports = { writeFile, writeData };
