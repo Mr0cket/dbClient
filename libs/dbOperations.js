@@ -1,5 +1,8 @@
 /* Common db Operations */
 
+const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const { dynamoDB } = require('./dbDocClient');
+
 /**
  *  Return all the records from the table
  **/

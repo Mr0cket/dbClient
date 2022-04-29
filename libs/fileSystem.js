@@ -13,4 +13,9 @@ const writeData = (dataName, data) => {
   return writeFile(filePath, data);
 };
 
-module.exports = { writeFile, writeData };
+const readData = (dataName) => {
+  const filePath = `${__dirname}/../data/${dataName}.json`;
+  return require(filePath);
+};
+
+module.exports = { writeFile, writeData, readData };
